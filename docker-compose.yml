@@ -1,9 +1,39 @@
-version: '3.5'
+
 
 services:
+  jibri:
+    image: jitsi/jibri:stable
+    restart: ${RESTART_POLICY:-unless-stopped}
+    volumes:
+            - ${CONFIG}/jibri:/config:Z
+            - /dev/shm:/dev/shm 
+    environment:
+            - ENABLE_RECORDING=1
+            - XMPP_AUTH_DOMAIN
+            - XMPP_INTERNAL_MUC_DOMAIN
+            - XMPP_SERVER
+            - JIBRI_XMPP_USER
+            - JIBRI_XMPP_PASSWORD
+            - JIBRI_BREWERY_MUC
+            - JIBRI_RECORDER_USER
+            - JIBRI_RECORDER_PASSWORD
+            - JIBRI_RECORDING_DIR
+            - JIBRI_FINALIZE_RECORDING_SCRIPT_PATH
+            - JIBRI_STRIP_DOMAIN_JID
+            - JIBRI_LOGS_DIR
+    cap_add:
+            - SYS_ADMIN
+            - NET_BIND_SERVICE
+    devices:
+            - /dev/snd:/dev/snd
+    networks:
+            meet.jitsi:
+    depends_on:
+            - jvb
+
     # Frontend
-    web:
-        image: jitsi/web:${JITSI_IMAGE_VERSION:-unstable}
+  web:
+        image: jitsi/web:stable
         restart: ${RESTART_POLICY:-unless-stopped}
         ports:
             - '${HTTP_PORT}:80'
@@ -191,8 +221,8 @@ services:
             - jvb
 
     # XMPP server
-    prosody:
-        image: jitsi/prosody:${JITSI_IMAGE_VERSION:-unstable}
+  prosody:
+        image: jitsi/prosody:stable
         restart: ${RESTART_POLICY:-unless-stopped}
         expose:
             - '${XMPP_PORT:-5222}'
@@ -340,8 +370,8 @@ services:
                     - ${XMPP_SERVER:-xmpp.meet.jitsi}
 
     # Focus component
-    jicofo:
-        image: jitsi/jicofo:${JITSI_IMAGE_VERSION:-unstable}
+  jicofo:
+        image: jitsi/jicofo:stable
         restart: ${RESTART_POLICY:-unless-stopped}
         ports:
             - '127.0.0.1:${JICOFO_REST_PORT:-8888}:8888'
@@ -350,6 +380,7 @@ services:
         labels:
             service: "jitsi-jicofo"
         environment:
+            - JICOFO_AUTH_PASSWORD=01149441801@2072003
             - AUTH_TYPE
             - BRIDGE_AVG_PARTICIPANT_STRESS
             - BRIDGE_STRESS_THRESHOLD
@@ -430,8 +461,8 @@ services:
             meet.jitsi:
 
     # Video bridge
-    jvb:
-        image: jitsi/jvb:${JITSI_IMAGE_VERSION:-unstable}
+  jvb:
+        image: jitsi/jvb:stable
         restart: ${RESTART_POLICY:-unless-stopped}
         ports:
             - '${JVB_PORT:-10000}:${JVB_PORT:-10000}/udp'
@@ -441,6 +472,7 @@ services:
         labels:
             service: "jitsi-jvb"
         environment:
+            - JVB_AUTH_PASSWORD=01149441801@2072003
             - AUTOSCALER_SIDECAR_KEY_FILE
             - AUTOSCALER_SIDECAR_KEY_ID
             - AUTOSCALER_SIDECAR_GROUP_NAME
@@ -496,6 +528,8 @@ services:
             - prosody
         networks:
             meet.jitsi:
+
+  
 
 # Custom network so all services can communicate using a FQDN
 networks:
