@@ -1,44 +1,29 @@
-# استخدم الصورة الرسمية لـ Jitsi Meet كصورة أساسية
+# استخدام صورة Jitsi Web الرسمية كصورة أساسية
 FROM jitsi/web:stable
 
-# تعيين المتغيرات البيئية بناءً على الإعدادات في ملف .env أو البيئة لديك
-ENV CONFIG=/config
-ENV HTTP_PORT=9090
-ENV HTTPS_PORT=8443
-ENV TZ=UTC
-ENV PUBLIC_URL=https://meet.example.com:${HTTPS_PORT}
-ENV JVB_ADVERTISE_IPS=192.168.1.1,1.2.3.4
-ENV ENABLE_AUTH=1
-ENV ENABLE_GUESTS=1
-ENV AUTH_TYPE=internal
+# تحديد إعدادات البيئة
+ENV AMPLITUDE_ID=${AMPLITUDE_ID} \
+    ANALYTICS_SCRIPT_URLS=${ANALYTICS_SCRIPT_URLS} \
+    AUDIO_QUALITY_OPUS_BITRATE=${AUDIO_QUALITY_OPUS_BITRATE} \
+    ENABLE_ADAPTIVE_MODE=${ENABLE_ADAPTIVE_MODE} \
+    ENABLE_E2EPING=${ENABLE_E2EPING} \
+    ENABLE_STATS_ID=${ENABLE_STATS_ID} \
+    PUBLIC_URL=${PUBLIC_URL} \
+    RESOLUTION=${RESOLUTION} \
+    TZ=${TZ}
 
-# تعيين بيانات الاعتماد الخاصة بالمصادقة
-ENV JICOFO_AUTH_PASSWORD=01149441801@2072003
-ENV JVB_AUTH_PASSWORD=01149441801@2072003
-ENV JIGASI_XMPP_PASSWORD=""
-ENV JIBRI_XMPP_PASSWORD=""
-ENV JIBRI_RECORDER_PASSWORD=""
+# نسخ الملفات المحلية إلى الحاوية
+COPY ${CONFIG}/web /config
+COPY ${CONFIG}/web/crontabs /var/spool/cron/crontabs
+COPY ${CONFIG}/transcripts /usr/share/jitsi-meet/transcripts
+COPY ${CONFIG}/web/load-test /usr/share/jitsi-meet/load-test
 
-# تمكين Let's Encrypt إذا كنت تحتاج إليه
-ENV ENABLE_LETSENCRYPT=1
-ENV LETSENCRYPT_EMAIL=alice@atlanta.net
-ENV LETSENCRYPT_DOMAIN=meet.example.com
+# تعيين المجلدات الصحيحة للصلاحيات
+RUN chmod -R 755 /config && \
+    chmod -R 755 /usr/share/jitsi-meet
 
-# فتح المنافذ المطلوبة لـ HTTP و HTTPS
-EXPOSE 9090
-EXPOSE 8443
+# تعيين المنافذ التي سيتم تشغيلها
+EXPOSE 80 443
 
-# تعيين الدليل العامل في الحاوية
-WORKDIR /usr/share/jitsi-meet
-
-# إذا كنت بحاجة لتثبيت أي تبعيات إضافية، يمكن إضافة سطور التثبيت هنا
-# RUN apt-get update && apt-get install -y <package_name>
-
-# نسخ ملفات التكوين من النظام المحلي إلى الحاوية
-COPY ./config /config
-
-# تأكد من أن جميع ملفات البيئة مثل .env وملفات التكوين الأخرى موجودة في الدليل المناسب
-# سيتم نسخها من الدليل المحلي إلى الحاوية كما في السطر السابق
-
-# بدء خدمة Jitsi Meet
-CMD ["bash", "/config/start.sh"]
+# تحديد الأمر الذي يتم تنفيذه عند بدء الحاوية
+CMD ["bash", "-c", "exec /usr/share/jitsi-meet/prosody"]
