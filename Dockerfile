@@ -1,5 +1,5 @@
 # استخدم الصورة الرسمية لـ Jitsi Meet كصورة أساسية
-FROM jitsi/web:stable-6689
+FROM jitsi/web:stable
 
 # تعيين المتغيرات البيئية بناءً على الإعدادات في ملف .env أو البيئة لديك
 ENV CONFIG=/config
