@@ -1,27 +1,44 @@
-FROM ubuntu:20.04
+# استخدم الصورة الرسمية لـ Jitsi Meet كصورة أساسية
+FROM jitsi/web:stable-6689
 
-# Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive \
-    JITSI_MEET_VERSION=latest
+# تعيين المتغيرات البيئية بناءً على الإعدادات في ملف .env أو البيئة لديك
+ENV CONFIG=/config
+ENV HTTP_PORT=9090
+ENV HTTPS_PORT=8443
+ENV TZ=UTC
+ENV PUBLIC_URL=https://meet.example.com:${HTTPS_PORT}
+ENV JVB_ADVERTISE_IPS=192.168.1.1,1.2.3.4
+ENV ENABLE_AUTH=1
+ENV ENABLE_GUESTS=1
+ENV AUTH_TYPE=internal
 
-# Update and install required dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    gnupg2 \
-    openjdk-11-jre-headless \
-    nginx \
-    prosody \
-    jitsi-meet \
-    jibri && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# تعيين بيانات الاعتماد الخاصة بالمصادقة
+ENV JICOFO_AUTH_PASSWORD=01149441801@2072003
+ENV JVB_AUTH_PASSWORD=01149441801@2072003
+ENV JIGASI_XMPP_PASSWORD=""
+ENV JIBRI_XMPP_PASSWORD=""
+ENV JIBRI_RECORDER_PASSWORD=""
 
-# Copy configuration files
-COPY ./config/nginx.conf /etc/nginx/nginx.conf
-COPY ./config/prosody.cfg.lua /etc/prosody/conf.avail/jitsi-meet.cfg.lua
-COPY ./config/jibri.conf.json /etc/jitsi/jibri/config.json
+# تمكين Let's Encrypt إذا كنت تحتاج إليه
+ENV ENABLE_LETSENCRYPT=1
+ENV LETSENCRYPT_EMAIL=alice@atlanta.net
+ENV LETSENCRYPT_DOMAIN=meet.example.com
 
-# Expose necessary ports
-EXPOSE 80 443 5222 5347 5280
+# فتح المنافذ المطلوبة لـ HTTP و HTTPS
+EXPOSE 9090
+EXPOSE 8443
 
-# Start services
-CMD ["/bin/bash", "-c", "service nginx start && service prosody start && /usr/bin/java -jar /opt/jitsi-meet/jitsi-meet.jar"]
+# تعيين الدليل العامل في الحاوية
+WORKDIR /usr/share/jitsi-meet
+
+# إذا كنت بحاجة لتثبيت أي تبعيات إضافية، يمكن إضافة سطور التثبيت هنا
+# RUN apt-get update && apt-get install -y <package_name>
+
+# نسخ ملفات التكوين من النظام المحلي إلى الحاوية
+COPY ./config/ /config/
+
+# تأكد من أن جميع ملفات البيئة مثل .env وملفات التكوين الأخرى موجودة في الدليل المناسب
+# سيتم نسخها من الدليل المحلي إلى الحاوية كما في السطر السابق
+
+# بدء خدمة Jitsi Meet
+CMD ["bash", "/config/start.sh"]
