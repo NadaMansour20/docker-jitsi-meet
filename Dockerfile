@@ -35,7 +35,7 @@ WORKDIR /usr/share/jitsi-meet
 # RUN apt-get update && apt-get install -y <package_name>
 
 # نسخ ملفات التكوين من النظام المحلي إلى الحاوية
-COPY ./config/ /config/
+COPY ./config /config
 
 # تأكد من أن جميع ملفات البيئة مثل .env وملفات التكوين الأخرى موجودة في الدليل المناسب
 # سيتم نسخها من الدليل المحلي إلى الحاوية كما في السطر السابق
