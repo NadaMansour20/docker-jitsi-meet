@@ -16,4 +16,4 @@ RUN apt-dpkg-wrap apt-get update && \
 
 COPY rootfs/ /
 
-VOLUME ["/config", "/tmp/transcripts"]
+#VOLUME ["/config", "/tmp/transcripts"]

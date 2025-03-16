@@ -43,4 +43,4 @@ RUN apt-dpkg-wrap apt-get update && \
     wget -qO /usr/bin/shm-check https://github.com/saghul/shm-check/releases/download/v1.0.0/shm-check-${SC_ARCH} && \
     chmod +x /usr/bin/shm-check
 
-VOLUME /config
+#VOLUME /config
