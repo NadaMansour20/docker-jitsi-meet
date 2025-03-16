@@ -7,6 +7,8 @@ WORKDIR /config
 # نسخ جميع الملفات إلى المسار الصحيح
 COPY . /config
 
+COPY web/rootfs/defaults/docker-entrypoint.sh /config/docker-entrypoint.sh
+
 # جعل ملف `docker-entrypoint.sh` قابلاً للتنفيذ
 RUN chmod +x /config/docker-entrypoint.sh
 
