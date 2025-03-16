@@ -14,4 +14,4 @@ RUN apt-dpkg-wrap apt-get update && \
 
 COPY rootfs/ /
 
-VOLUME /config
+#VOLUME /config

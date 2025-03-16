@@ -77,4 +77,4 @@ COPY --from=builder /usr/local/share/lua/5.4 /usr/local/share/lua/5.4
 
 EXPOSE 5222 5280
 
-VOLUME ["/config", "/prosody-plugins-custom"]
+#VOLUME ["/config", "/prosody-plugins-custom"]
