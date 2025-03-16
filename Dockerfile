@@ -4,8 +4,11 @@ FROM jitsi/web:stable
 # تعيين مسار العمل
 WORKDIR /config
 
-# نسخ ملفات Jitsi Meet إلى المسار
+# نسخ جميع الملفات إلى المسار الصحيح
 COPY . /config
 
-# تعيين نقطة الدخول
+# جعل ملف `docker-entrypoint.sh` قابلاً للتنفيذ
+RUN chmod +x /config/docker-entrypoint.sh
+
+# تشغيل `docker-entrypoint.sh` عند بدء التشغيل
 ENTRYPOINT ["/config/docker-entrypoint.sh"]
