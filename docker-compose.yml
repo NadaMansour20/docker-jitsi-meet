@@ -5,7 +5,6 @@ services:
         image: jitsi/web:stable
         restart: ${RESTART_POLICY:-unless-stopped}
         ports:
-            - '8080:80'
             - '8443:443'
         volumes:
             - /config/web:/config:Z
@@ -15,7 +14,7 @@ services:
         labels:
             service: "jitsi-web"
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
             - AMPLITUDE_ID
             - ANALYTICS_SCRIPT_URLS
             - ANALYTICS_WHITELISTED_EVENTS
@@ -210,7 +209,7 @@ services:
             - /config/prosody/config:/config:Z
             - /config/prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
             - AUTH_TYPE
             - DISABLE_POLLS
             - ENABLE_AUTH
@@ -356,7 +355,7 @@ services:
         labels:
             service: "jitsi-jicofo"
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
             - JICOFO_AUTH_PASSWORD=01149441801@2072003
             - AUTH_TYPE
             - BRIDGE_AVG_PARTICIPANT_STRESS
@@ -449,7 +448,7 @@ services:
         labels:
             service: "jitsi-jvb"
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
             - JVB_AUTH_PASSWORD=01149441801@2072003
             - AUTOSCALER_SIDECAR_KEY_FILE
             - AUTOSCALER_SIDECAR_KEY_ID
