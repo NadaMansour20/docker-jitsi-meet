@@ -15,7 +15,7 @@ services:
         labels:
             service: "jitsi-web"
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
             - AMPLITUDE_ID
             - ANALYTICS_SCRIPT_URLS
             - ANALYTICS_WHITELISTED_EVENTS
@@ -210,8 +210,7 @@ services:
             - /config/prosody/config:/config:Z
             - /config/prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
-
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
             - AUTH_TYPE
             - DISABLE_POLLS
             - ENABLE_AUTH
@@ -357,7 +356,7 @@ services:
         labels:
             service: "jitsi-jicofo"
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
             - JICOFO_AUTH_PASSWORD=01149441801@2072003
             - AUTH_TYPE
             - BRIDGE_AVG_PARTICIPANT_STRESS
@@ -450,7 +449,7 @@ services:
         labels:
             service: "jitsi-jvb"
         environment:
-            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app:8443
             - JVB_AUTH_PASSWORD=01149441801@2072003
             - AUTOSCALER_SIDECAR_KEY_FILE
             - AUTOSCALER_SIDECAR_KEY_ID
