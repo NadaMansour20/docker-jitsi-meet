@@ -16,6 +16,7 @@ services:
         labels:
             service: "jitsi-web"
         environment:
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
             - AMPLITUDE_ID
             - ANALYTICS_SCRIPT_URLS
             - ANALYTICS_WHITELISTED_EVENTS
@@ -185,6 +186,10 @@ services:
             - XMPP_RECORDER_DOMAIN
             - WHITEBOARD_COLLAB_SERVER_PUBLIC_URL
             - WHITEBOARD_COLLAB_SERVER_URL_BASE
+            - ENABLE_XMPP_WEBSOCKET=1
+            - ENABLE_HTTP_REDIRECT=1
+            - ENABLE_RECORDING=1
+            - XMPP_BOSH_URL_BASE=https://docker-jitsi-meet-production.up.railway.app/http-bind
         networks:
             meet.jitsi:
         depends_on:
@@ -206,6 +211,8 @@ services:
             - /config/prosody/config:/config:Z
             - /config/prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
         environment:
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
+
             - AUTH_TYPE
             - DISABLE_POLLS
             - ENABLE_AUTH
@@ -351,6 +358,7 @@ services:
         labels:
             service: "jitsi-jicofo"
         environment:
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
             - JICOFO_AUTH_PASSWORD=01149441801@2072003
             - AUTH_TYPE
             - BRIDGE_AVG_PARTICIPANT_STRESS
@@ -443,6 +451,7 @@ services:
         labels:
             service: "jitsi-jvb"
         environment:
+            - PUBLIC_URL=https://docker-jitsi-meet-production.up.railway.app
             - JVB_AUTH_PASSWORD=01149441801@2072003
             - AUTOSCALER_SIDECAR_KEY_FILE
             - AUTOSCALER_SIDECAR_KEY_ID
